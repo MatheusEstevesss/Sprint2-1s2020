@@ -21,7 +21,7 @@ namespace senai.Filmes.WebApi.Repositories
             using (SqlConnection con = new SqlConnection(StringConexao))
             {
                 // Declara a instrução a ser executada
-                string query = "SELECT Filmes.IdFilme, Filmes.Titulo, Filmes.IdGenero, Generos.Nome FROM Filmes INNER JOIN Generos ON Filmes.IdGenero = Generos.IdGenero";
+                string query = "SELECT Filmes.IdFilme, Filmes.Titulo, Filmes.IdGenero, Generos.Nome FROM Filmes INNER JOIN Generos ON Filmes.IdGenero = Generos.IdGenero ORDER BY Titulo DESC";
 
                 // Abre a conexão com o banco de dados
                 con.Open();
@@ -141,6 +141,39 @@ namespace senai.Filmes.WebApi.Repositories
                     con.Open();
 
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public FilmeDomain GetByName(string Name)
+        {
+            using (SqlConnection con = new SqlConnection(StringConexao))
+            {
+                string queryGetByName = "SELECT IdFilme, Titulo, IdGenero FROM Filmes WHERE Titulo = @Name";
+
+                con.Open();
+
+                SqlDataReader rdr;
+
+                using (SqlCommand cmd = new SqlCommand(queryGetByName, con))
+                {
+                    cmd.Parameters.AddWithValue("@Name", Name);
+
+                    rdr = cmd.ExecuteReader();
+
+                    if (rdr.Read())
+                    {
+                        FilmeDomain filme = new FilmeDomain
+                        {
+                            IdFilme = Convert.ToInt32(rdr[0]),
+
+                            Titulo = rdr[1].ToString(),
+
+                            IdGenero = Convert.ToInt32(rdr[2])
+                        };
+                        return filme;
+                    }
+                    return null;
                 }
             }
         }

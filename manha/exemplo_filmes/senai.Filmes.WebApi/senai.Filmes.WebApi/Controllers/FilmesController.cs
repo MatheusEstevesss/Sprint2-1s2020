@@ -73,6 +73,19 @@ namespace senai.Filmes.WebApi.Controllers
             {
                 return BadRequest(e);
             }
-        }        
+        }
+
+        [HttpGet("{buscar}")]
+        public IActionResult GetByName (FilmeDomain Name)
+        {
+            FilmeDomain filmeBuscado = filmeRepository.GetByName(Name.Titulo);
+
+            if(filmeBuscado == null)
+            {
+                return NotFound("titulo não encontrado");
+            }
+
+            return Ok(filmeBuscado);
+        }
     }
 }

@@ -14,6 +14,8 @@ namespace senai.Filmes.WebApi.Interfaces
 
         FilmeDomain GetById(int id);
 
+        FilmeDomain GetByName(string Name);
+
         void Deletar(int id);
 
         void Atualizar(int id, FilmeDomain filme);
